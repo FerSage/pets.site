@@ -1,0 +1,137 @@
+/* Общие стили */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px; /* Добавим отступы для контейнера */
+}
+
+/* Профиль пользователя */
+.profile-container {
+    background-color: #fff; /* Фон для блока профиля */
+    border: 1px solid #ddd; /* Граница контейнера */
+    border-radius: 8px; /* Закругленные углы */
+    padding: 20px; /* Отступы внутри блока */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень для выделения блока */
+}
+
+.profile-container h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.profile-container p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.profile-container button {
+    margin-top: 20px;
+}
+
+/* Стиль для карточек */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff; /* Добавляем белый фон для карточек */
+}
+
+.card-img-top {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #555;
+}
+
+.text-clip {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Стиль для кнопок */
+.btn-view {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.btn-view:hover {
+    background-color: #0056b3;
+}
+
+/* Стиль для модальных окон */
+.modal-content {
+    border-radius: 8px;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+}
+
+/* Кнопка выхода */
+.btn-danger {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.text-center {
+    margin-top: 30px;
+}
+
+/* Подсветка контейнера */
+.card-container {
+    background-color: #f8f9fa; /* Добавляем светлый фон для всей зоны карточек */
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.card-container .card {
+    margin: 10px 0; /* Добавим промежутки между карточками */
+}
+
+/* Модификация кнопки для выхода */
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
