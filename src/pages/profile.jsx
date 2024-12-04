@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Dog from "../image/Dog.jpg";  // Импорт картинок
+import Dog from "../image/Dog.jpg";
 import Cat from "../image/Cat.jpg";
 import Goat from "../image/Goat.jpg";
-import "../css/Profile.css"; // Путь к вашему CSS файлу
+import "../css/Profile.css";
 
 const Profile = () => {
     const [currentPage, setCurrentPage] = useState(1);
