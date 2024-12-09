@@ -12,16 +12,16 @@ import "../css/AnimalCards.css"
 
 const AnimalCards = () => {
     const animals = [
-        { id: 2, kind: "Кошка", description: "Очень пушистая и ласковая.", image: CatImage, modalId: "modal1" },
-        { id: 3, kind: "Коза", description: "Пуховая коза с белой шерстью.", image: GoatImage, modalId: "modal2" },
-        { id: 1, kind: "Собака", description: "Добрая собака с рыжей шерстью.", image: DogImage, modalId: "modal3" },
-        { id: 4, kind: "Кролик", description: "Маленький белый кролик.", image: KrolikImage, modalId: "modal4" },
-        { id: 5, kind: "Попугай", description: "Попугай с яркими перьями.", image: BirdImage, modalId: "modal5" },
-        { id: 6, kind: "Хомяк", description: "Хомяк с пушистыми лапками.", image: HomyakImage, modalId: "modal6" },
-        { id: 7, kind: "Черепаха", description: "Маленькая черепаха с зелёным панцирем.", image: NinjiaImage, modalId: "modal7" },
-        { id: 8, kind: "Крокодил", description: "Экзотический крокодил.", image: KrokoImage, modalId: "modal8" },
-        { id: 9, kind: "Лошадь", description: "Мощная и красивая лошадь.", image: HorseImage, modalId: "modal9" },
-    ];
+        { id: 2, kind: "Кошка", description: "Очень пушистая и ласковая.", image: CatImage, district: "Центральный", modalId: "modal1" },
+        { id: 3, kind: "Коза", description: "Пуховая коза с белой шерстью.", image: GoatImage, district: "Василеостровский", modalId: "modal2" },
+        { id: 1, kind: "Собака", description: "Добрая собака с рыжей шерстью.", image: DogImage, district: "Центральный", modalId: "modal3" },
+        { id: 4, kind: "Кролик", description: "Маленький белый кролик.", image: KrolikImage, district: "Петроградский", modalId: "modal4" },
+        { id: 5, kind: "Попугай", description: "Попугай с яркими перьями.", image: BirdImage, district: "Выборгский", modalId: "modal5" },
+        { id: 6, kind: "Хомяк", description: "Хомяк с пушистыми лапками.", image: HomyakImage, district: "Центральный", modalId: "modal6" },
+        { id: 7, kind: "Черепаха", description: "Маленькая черепаха с зелёным панцирем.", image: NinjiaImage, district: "Калининский", modalId: "modal7" },
+        { id: 8, kind: "Крокодил", description: "Экзотический крокодил.", image: KrokoImage, district: "Кировский", modalId: "modal8" },
+        { id: 9, kind: "Лошадь", description: "Мощная и красивая лошадь.", image: HorseImage, district: "Петроградский", modalId: "modal9" },
+      ];
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 3;
@@ -106,8 +106,9 @@ const AnimalCards = () => {
                             </div>
                             <div className="modal-body">
                                 <p><strong>ID:</strong> {animal.id}</p>
-                                <p><strong>Вид животного:</strong> {animal.name}</p>
+                                <p><strong>Вид животного:</strong> {animal.kind}</p>
                                 <p><strong>Описание:</strong> {animal.description}</p>
+                                <p><strong>Район:</strong> {animal.district}</p>
                             </div>
                             <div className="modal-footer">
                                 <button

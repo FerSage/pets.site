@@ -38,13 +38,17 @@ const Profile = () => {
         // Здесь может быть логика для выхода из аккаунта
     };
 
+    const handleDelete = () => {
+        alert("Запись удалена");
+    };
+
     return (
         <main className="container mt-5">
             <div className="profile-container">
                 <h3>Профиль</h3>
                 <p><strong>ФИО:</strong> Иванов Иван Иванович</p>
                 <p><strong>Почта:</strong> ivanov@example.com</p>
-                <p><strong>Телефон:</strong> +7 123 456-78-90</p>
+                <p><strong>Телефон:</strong> +7 123 456 78-90</p>
                 <p><strong>Дата регистрации:</strong> 27-11-2024</p>
                 <button className="btn btn-primary mt-3" onClick={() => alert("Редактирование информации пользователя.")}>
                     Редактировать информацию
@@ -59,14 +63,29 @@ const Profile = () => {
                         <div className="card-body">
                             <h5 className="card-title">{animal.name}</h5>
                             <p className="card-text text-clip">{animal.description}</p>
-                            <button type="button" className="btn btn-view" data-bs-toggle="modal"
-                                    data-bs-target={`#${animal.modalId}`}>
-                                Посмотреть
-                            </button>
+                            <div className="button-group">
+                                <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target={`#${animal.modalId}`}
+                                >
+                                    Редактировать
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={() => handleDelete(animal.id)}
+                                >
+                                    Удалить
+                                </button>
+                            </div>
                         </div>
                     </div>
                 ))}
             </div>
+
+
 
             {/* Модальные окна для животных */}
             {animals.map((animal) => (

@@ -233,57 +233,132 @@ const Header = () => {
                 </div>
             </div>
 
-            {/* Login Modal */}
-            <div
-                className="modal fade"
-                id="loginModal"
-                tabIndex="-1"
-                aria-labelledby="loginModalLabel"
-                aria-hidden="true"
-            >
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h1 className="modal-title fs-5" id="loginModalLabel" style={{ color: 'black' }}>
-                                Вход
-                            </h1>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                {/* Модальное окно для входа */}
+    <div
+        className="modal fade"
+        id="loginModal"
+        tabIndex="-1"
+        aria-labelledby="loginModalLabel"
+        aria-hidden="true"
+    >
+        <div className="modal-dialog">
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h1 className="modal-title fs-5" id="loginModalLabel" style={{ color: 'black' }}>
+                        Вход
+                    </h1>
+                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div className="modal-body text-start">
+                    <form noValidate>
+                        <div className="mb-3">
+                            <label htmlFor="loginEmailInput" className="form-label" style={{ color: 'black' }}>
+                                Email
+                            </label>
+                            <input type="email" className="form-control" id="loginEmailInput" required />
+                            <div className="invalid-feedback">Заполните поле с email.</div>
                         </div>
-                        <div className="modal-body text-start">
-                            <form noValidate>
-                                <div className="mb-3">
-                                    <label htmlFor="loginEmailInput" className="form-label" style={{ color: 'black' }}>
-                                        Email
-                                    </label>
-                                    <input type="email" className="form-control" id="loginEmailInput" required />
-                                    <div className="invalid-feedback">Заполните поле с email.</div>
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="loginPasswordInput" className="form-label" style={{ color: 'black' }}>
-                                        Пароль
-                                    </label>
-                                    <input type="password" className="form-control" id="loginPasswordInput" required />
-                                    <div className="invalid-feedback">Заполните поле с паролем.</div>
-                                </div>
-                                <div className="mb-3 form-check">
-                                    <input type="checkbox" className="form-check-input" id="rememberMeCheck" />
-                                    <label className="form-check-label" htmlFor="rememberMeCheck" style={{ color: 'black' }}>
-                                        Запомнить меня
-                                    </label>
-                                </div>
-                                <button type="submit" className="btn btn-primary">
-                                    Войти
-                                </button>
-                            </form>
+                        <div className="mb-3">
+                            <label htmlFor="loginPasswordInput" className="form-label" style={{ color: 'black' }}>
+                                Пароль
+                            </label>
+                            <input type="password" className="form-control" id="loginPasswordInput" required />
+                            <div className="invalid-feedback">Заполните поле с паролем.</div>
                         </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                                Закрыть
-                            </button>
+                        <div className="mb-3 form-check">
+                            <input type="checkbox" className="form-check-input" id="rememberMeCheck" />
+                            <label className="form-check-label" htmlFor="rememberMeCheck" style={{ color: 'black' }}>
+                                Запомнить меня
+                            </label>
                         </div>
-                    </div>
+                        <button type="submit" className="btn btn-primary">
+                            Войти
+                        </button>
+                    </form>
+                </div>
+                <div className="modal-footer">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" style={{ marginRight: '10px' }}>
+                        Забыли пароль?
+                    </a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#forgotLoginModal">
+                        Забыли логин?
+                    </a>
+                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                        Закрыть
+                    </button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    {/* Модальное окно "Забыли пароль?" */}
+    <div
+        className="modal fade"
+        id="forgotPasswordModal"
+        tabIndex="-1"
+        aria-labelledby="forgotPasswordModalLabel"
+        aria-hidden="true"
+    >
+        <div className="modal-dialog">
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h1 className="modal-title fs-5" id="forgotPasswordModalLabel" style={{ color: 'black' }}>
+                        Восстановление пароля
+                    </h1>
+                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div className="modal-body text-start">
+                    <form noValidate>
+                        <div className="mb-3">
+                            <label htmlFor="resetPasswordEmailInput" className="form-label" style={{ color: 'black' }}>
+                                Введите ваш email для восстановления пароля
+                            </label>
+                            <input type="email" className="form-control" id="resetPasswordEmailInput" required />
+                            <div className="invalid-feedback">Заполните поле с email.</div>
+                        </div>
+                        <button type="submit" className="btn btn-primary">
+                            Отправить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {/* Модальное окно "Забыли пароль?" */}
+    <div
+        className="modal fade"
+        id="forgotLoginModal"
+        tabIndex="-1"
+        aria-labelledby="forgotLoginModalLabel"
+        aria-hidden="true"
+    >
+        <div className="modal-dialog">
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h1 className="modal-title fs-5" id="forgotLoginModalLabel" style={{ color: 'black' }}>
+                        Восстановление логина
+                    </h1>
+                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div className="modal-body text-start">
+                    <form noValidate>
+                        <div className="mb-3">
+                            <label htmlFor="resetLoginEmailInput" className="form-label" style={{ color: 'black' }}>
+                                Введите ваш email для восстановления логина
+                            </label>
+                            <input type="email" className="form-control" id="resetLoginEmailInput" required />
+                            <div className="invalid-feedback">Заполните поле с email.</div>
+                        </div>
+                        <button type="submit" className="btn btn-primary">
+                            Отправить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
         </header>
     );
 };
