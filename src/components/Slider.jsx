@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 
+
 function Slide({ data, isActive }) {
   return (
     <div className={`carousel-item ${isActive ? 'active' : ''}`}>
@@ -42,7 +43,7 @@ function Slider() {
 
   const fetchSliderData = async () => {
     try {
-      const response = await fetch('https://pets.xn--80ahdri7a.site/api/pets/slider'); // Замените URL на реальный      
+      const response = await fetch('https://pets.xn--80ahdri7a.site/api/pets/slider');    
       const data = await response.json();
       setSliderData(data.data.pets || []);
       setLoading(false);

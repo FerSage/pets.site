@@ -1,96 +1,150 @@
-import React, { useState } from "react";
-import CatImage from "../image/Cat.jpg";
-import GoatImage from "../image/Goat.jpg";
-import DogImage from "../image/Dog.jpg";
-import HomyakImage from "../image/homyak.jpg";
-import HorseImage from "../image/horse.webp";
-import KrokoImage from "../image/kroko.webp";
-import KrolikImage from "../image/krolik.webp";
-import BirdImage from "../image/bird.webp";
-import NinjiaImage from "../image/ninjia.jpg";
-import "../css/Search.css";
-
-const Search = () => {
-  const ads = [
-    { id: 2, kind: 'Кошка', description: 'Очень пушистая и ласковая.', chipNumber: 'ca-001-spb', region: 'Центральный', date: '14-03-2022', image: CatImage },
-    { id: 3, kind: 'Коза', description: 'Пуховая коза с белой шерстью.', chipNumber: 'go-011-spb', region: 'Центральный', date: '14-03-2022', image: GoatImage },
-    { id: 1, kind: 'Собака', description: 'Добрая собака с рыжей шерстью.', chipNumber: 'do-012-spb', region: 'Центральный', date: '22-07-2023', image: DogImage },
-    { id: 4, kind: 'Попугай', description: 'Попугай с яркими перьями.', chipNumber: 'pa-005-spb', region: 'Василиостровский', date: '05-06-2021', image: BirdImage },
-    { id: 5, kind: 'Крокодил', description: 'Экзотический крокодил.', chipNumber: 'cr-009-spb', region: 'Петроградский', date: '12-07-2023', image: KrokoImage },
-    { id: 6, kind: 'Кролик', description: 'Маленький белый кролик.', chipNumber: 'kr-002-spb', region: 'Адмиралтейский', date: '22-03-2022', image: KrolikImage },
-    { id: 7, kind: 'Черепаха', description: 'Маленькая черепаха с зелёным панцирем.', chipNumber: 'tu-008-spb', region: 'Петроградский', date: '17-10-2023', image: NinjiaImage },
-    { id: 8, kind: 'Хомяк', description: 'Хомяк с пушистыми лапками.', chipNumber: 'ha-003-spb', region: 'Василиостровский', date: '14-08-2023', image: HomyakImage },
-    { id: 9, kind: 'Лошадь', description: 'Мощная и красивая лошадь.', chipNumber: 'ho-014-spb', region: 'Калининский', date: '01-11-2023', image: HorseImage }
-  ];
-
-  const [filteredAds, setFilteredAds] = useState(ads);
+import React, { useState, useEffect } from 'react';
+import AdCard from '../components/AdCard';
+import '../css/Search.css';
+ 
+function Search() {
+  const [region, setRegion] = useState('');
+  const [animalType, setAnimalType] = useState('');
+  const [ads, setAds] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3; // Количество элементов на странице
-
-  const searchAds = () => {
-    const region = document.getElementById('regionInput').value.trim();
-    const animalkind = document.getElementById('animalkindInput').value.trim().toLowerCase();
-    const newFilteredAds = ads.filter(ad => {
-      const matchesRegion = region ? ad.region === region : true;
-      const matcheskind = animalkind ? ad.kind.toLowerCase().includes(animalkind) : true;
-      return matchesRegion && matcheskind;
+  const [totalPages, setTotalPages] = useState(1);
+  const resultsPerPage = 3;
+ 
+  useEffect(() => {
+    const fetchAds = async () => {
+      try {
+        const response = await fetch('https://pets.сделай.site/api/pets');
+        const data = await response.json();
+ 
+        if (data && data.data && data.data.orders) {
+          setAds(data.data.orders);
+          setTotalPages(Math.ceil(data.data.orders.length / resultsPerPage));
+        } else {
+          setAds([]);
+          setTotalPages(1);
+        }
+      } catch (error) {
+        setErrorMessage('Ошибка при загрузке данных. Попробуйте позже.');
+        console.error('Ошибка:', error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+ 
+    fetchAds();
+  }, []);
+ 
+  const handleSearch = () => {
+    if (!region && !animalType) {
+      setErrorMessage('Необходимо указать район или вид животного для поиска.');
+      return;
+    }
+    setErrorMessage('');
+ 
+    const filteredAds = ads.filter((ad) => {
+      const matchesRegion = region
+        ? ad.district.toLowerCase().includes(region.toLowerCase())
+        : true;
+      const matchesAnimalType = animalType
+        ? ad.kind.toLowerCase().includes(animalType.toLowerCase())
+        : true;
+      return matchesRegion && matchesAnimalType;
     });
-    setFilteredAds(newFilteredAds);
-    setCurrentPage(1); // сброс текущей страницы на 1 при изменении фильтра
+ 
+    setAds(filteredAds);
+    setTotalPages(Math.ceil(filteredAds.length / resultsPerPage));
+    setCurrentPage(1);
   };
-
-  // Пагинация
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredAds.slice(indexOfFirstItem, indexOfLastItem);
-
-  const totalPages = Math.ceil(filteredAds.length / itemsPerPage);
-
+ 
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
   };
-
+ 
+  const indexOfLastAd = currentPage * resultsPerPage;
+  const indexOfFirstAd = indexOfLastAd - resultsPerPage;
+  const currentAds = ads.slice(indexOfFirstAd, indexOfLastAd);
+ 
   return (
-    <div>
-      <header>
-        <h1>Поиск объявлений о потерянных животных</h1>
-      </header>
-
-      <main>
-        <div className="search-box">
-          <input className="form-control me-2" type="text" id="regionInput" placeholder="Район" />
-          <input className="form-control me-2" type="text" id="animalkindInput" placeholder="Вид животного" />
-          <button onClick={searchAds} className="btn btn-primary" type="button">Поиск</button>
+    <main className="container mt-5">
+      <h2 className="text-center mb-4">Поиск объявлений о животных</h2>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSearch();
+        }}
+      >
+        <div className="mb-3">
+          <label htmlFor="animalTypeInput" className="form-label">
+            Вид животного
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="animalTypeInput"
+            placeholder="Введите вид животного (например, кошка, собака)"
+            value={animalType}
+            onChange={(e) => setAnimalType(e.target.value)}
+          />
         </div>
-
-        <div id="adsContainer">
-          {filteredAds.length === 0 ? (
-            <p>Объявлений не найдено.</p>
-          ) : (
-            <div className="ads-grid">
-              {currentItems.map(ad => (
-                <div key={ad.id} className="ad-card">
-                  <img src={ad.image} alt={ad.kind} />
-                  <p><strong>ID:</strong> {ad.id}</p>
-                  <p><strong>Вид животного:</strong> {ad.kind}</p>
-                  <p><strong>Описание:</strong> {ad.description}</p>
-                  <p><strong>Номер чипа:</strong> {ad.chipNumber}</p>
-                  <p><strong>Район:</strong> {ad.region}</p>
-                  <p><strong>Дата:</strong> {ad.date}</p>
-                </div>
-              ))}
-            </div>
-          )}
+        <div className="mb-3">
+          <label htmlFor="regionInput" className="form-label">
+            Район
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="regionInput"
+            placeholder="Введите район"
+            value={region}
+            onChange={(e) => setRegion(e.target.value)}
+          />
         </div>
-
-        {/* Пагинация */}
-        {filteredAds.length > 0 && (
-          <nav>
+        <button type="submit" className="btn btn-primary w-100">
+          Найти объявления
+        </button>
+      </form>
+ 
+      {loading && <p className="text-center mt-4">Загрузка...</p>}
+ 
+      {!loading && errorMessage && (
+        <p className="text-danger text-center mt-4">{errorMessage}</p>
+      )}
+ 
+      {!loading && !errorMessage && ads.length === 0 && (
+        <p className="text-center mt-4">Объявлений не найдено.</p>
+      )}
+ 
+      {!loading && ads.length > 0 && (
+        <>
+          <div id="adsContainer" className="mt-4">
+            {currentAds.map((ad) => (
+              <AdCard key={ad.id} ad={ad} />
+            ))}
+          </div>
+          <nav className="mt-4">
             <ul className="pagination justify-content-center">
-              {[...Array(totalPages)].map((_, index) => (
+              <li
+                className={`page-item ${
+                  currentPage === 1 ? 'disabled' : ''
+                }`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                >
+                  Предыдущая
+                </button>
+              </li>
+              {Array.from({ length: totalPages }, (_, index) => (
                 <li
                   key={index + 1}
-                  className={`page-item ${currentPage === index + 1 ? "active" : ""}`}
+                  className={`page-item ${
+                    currentPage === index + 1 ? 'active' : ''
+                  }`}
                 >
                   <button
                     className="page-link"
@@ -100,12 +154,24 @@ const Search = () => {
                   </button>
                 </li>
               ))}
+              <li
+                className={`page-item ${
+                  currentPage === totalPages ? 'disabled' : ''
+                }`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                >
+                  Следующая
+                </button>
+              </li>
             </ul>
           </nav>
-        )}
-      </main>
-    </div>
+        </>
+      )}
+    </main>
   );
-};
-
+}
+ 
 export default Search;

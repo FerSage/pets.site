@@ -1,42 +1,69 @@
-.ads-grid {
+/* Search.css */
+
+/* Style the container for the form */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Make the form responsive */
+.form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  justify-content: space-between;
+  gap: 16px;
 }
 
-.ad-card {
-  flex: 1 1 250px;
-  border: 1px solid #ddd;
-  padding: 15px;
-  background-color: #f9f9f9;
-  text-align: center;
-  box-sizing: border-box;
-}
-
-.ad-card img {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 8px;
+.col-md-6 {
+  flex: 1 1 calc(50% - 16px);
 }
 
 @media (max-width: 768px) {
-  .ads-grid {
-    justify-content: center;
-  }
-
-  .ad-card {
+  .col-md-6 {
     flex: 1 1 100%;
   }
 }
 
-@media (max-width: 1024px) {
-  .ads-grid {
-    justify-content: space-evenly;
-  }
+/* Center the loading and error messages */
+.text-center {
+  text-align: center;
+}
 
-  .ad-card {
-    flex: 1 1 50%;
+/* Ad Card container grid */
+#adsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+#adsContainer .col-md-4 {
+  flex: 1 1 calc(33.3333% - 20px);
+}
+
+@media (max-width: 768px) {
+  #adsContainer .col-md-4 {
+    flex: 1 1 100%;
   }
+}
+
+/* Pagination styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.page-item .page-link {
+  padding: 8px 16px;
+  text-align: center;
+}
+
+.page-item.disabled .page-link {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.page-item.active .page-link {
+  background-color: #007bff;
+  color: white;
 }
