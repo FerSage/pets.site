@@ -1,177 +1,79 @@
-import React, { useState, useEffect } from 'react';
-import AdCard from '../components/AdCard';
-import '../css/Search.css';
- 
-function Search() {
-  const [region, setRegion] = useState('');
-  const [animalType, setAnimalType] = useState('');
-  const [ads, setAds] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+import React, { useState, useEffect, useCallback } from 'react';
+import SearchResults from '../components/SearchResults';
+
+const Search = () => {
+  const [district, setDistrict] = useState('');
+  const [kind, setKind] = useState('');
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
-  const resultsPerPage = 3;
- 
-  useEffect(() => {
-    const fetchAds = async () => {
-      try {
-        const response = await fetch('https://pets.сделай.site/api/pets');
-        const data = await response.json();
- 
-        if (data && data.data && data.data.orders) {
-          setAds(data.data.orders);
-          setTotalPages(Math.ceil(data.data.orders.length / resultsPerPage));
-        } else {
-          setAds([]);
-          setTotalPages(1);
-        }
-      } catch (error) {
-        setErrorMessage('Ошибка при загрузке данных. Попробуйте позже.');
-        console.error('Ошибка:', error.message);
-      } finally {
-        setLoading(false);
+
+  const fetchAnimals = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`https://pets.сделай.site/api/search`);
+      const data = await response.json();
+      if (data.data?.orders) {
+        const sortedAnimals = [...data.data.orders].sort((a, b) => new
+          Date(b.date) - new Date(a.date));
+
+        // Фильтрация по району и виду
+        const filteredOrders = sortedAnimals.filter((order) => {
+          const matchesDistrict = district ?
+            order.district.toLowerCase() === district.toLowerCase() : true;
+          const matchesKind = kind ?
+            order.kind.toLowerCase().includes(kind.toLowerCase()) : true;
+          return matchesDistrict && matchesKind;
+        });
+
+        setResults(filteredOrders);
+        setTotalPages(Math.ceil(filteredOrders.length / 6)); //Пагинация на 6 элементов
       }
-    };
- 
-    fetchAds();
-  }, []);
- 
-  const handleSearch = () => {
-    if (!region && !animalType) {
-      setErrorMessage('Необходимо указать район или вид животного для поиска.');
-      return;
+    } catch (error) {
+      console.error('Ошибка при загрузке данных:', error);
+    } finally {
+      setLoading(false);
     }
-    setErrorMessage('');
- 
-    const filteredAds = ads.filter((ad) => {
-      const matchesRegion = region
-        ? ad.district.toLowerCase().includes(region.toLowerCase())
-        : true;
-      const matchesAnimalType = animalType
-        ? ad.kind.toLowerCase().includes(animalType.toLowerCase())
-        : true;
-      return matchesRegion && matchesAnimalType;
-    });
- 
-    setAds(filteredAds);
-    setTotalPages(Math.ceil(filteredAds.length / resultsPerPage));
-    setCurrentPage(1);
-  };
- 
-  const handlePageChange = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-    }
-  };
- 
-  const indexOfLastAd = currentPage * resultsPerPage;
-  const indexOfFirstAd = indexOfLastAd - resultsPerPage;
-  const currentAds = ads.slice(indexOfFirstAd, indexOfLastAd);
- 
+  }, [district, kind]);
+
+  useEffect(() => {
+    fetchAnimals();
+  }, [district, kind, fetchAnimals]);
+
   return (
-    <main className="container mt-5">
-      <h2 className="text-center mb-4">Поиск объявлений о животных</h2>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSearch();
-        }}
-      >
-        <div className="mb-3">
-          <label htmlFor="animalTypeInput" className="form-label">
-            Вид животного
-          </label>
+    <div className="container">
+      <h2 className="text-center mt-4">Поиск по объявлениям</h2>
+      <div className="row mb-4 mt-5">
+        <div className="col">
           <input
             type="text"
             className="form-control"
-            id="animalTypeInput"
-            placeholder="Введите вид животного (например, кошка, собака)"
-            value={animalType}
-            onChange={(e) => setAnimalType(e.target.value)}
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="regionInput" className="form-label">
-            Район
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="regionInput"
             placeholder="Введите район"
-            value={region}
-            onChange={(e) => setRegion(e.target.value)}
+            value={district}
+            onChange={(e) => setDistrict(e.target.value)}
           />
         </div>
-        <button type="submit" className="btn btn-primary w-100">
-          Найти объявления
-        </button>
-      </form>
- 
-      {loading && <p className="text-center mt-4">Загрузка...</p>}
- 
-      {!loading && errorMessage && (
-        <p className="text-danger text-center mt-4">{errorMessage}</p>
-      )}
- 
-      {!loading && !errorMessage && ads.length === 0 && (
-        <p className="text-center mt-4">Объявлений не найдено.</p>
-      )}
- 
-      {!loading && ads.length > 0 && (
-        <>
-          <div id="adsContainer" className="mt-4">
-            {currentAds.map((ad) => (
-              <AdCard key={ad.id} ad={ad} />
-            ))}
+        <div className="col">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Введите вид животного"
+            value={kind}
+            onChange={(e) => setKind(e.target.value)}
+          />
+        </div>
+      </div>
+      {loading ? (
+        <div className="text-center mt-4">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Загрузка...</span>
           </div>
-          <nav className="mt-4">
-            <ul className="pagination justify-content-center">
-              <li
-                className={`page-item ${
-                  currentPage === 1 ? 'disabled' : ''
-                }`}
-              >
-                <button
-                  className="page-link"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                >
-                  Предыдущая
-                </button>
-              </li>
-              {Array.from({ length: totalPages }, (_, index) => (
-                <li
-                  key={index + 1}
-                  className={`page-item ${
-                    currentPage === index + 1 ? 'active' : ''
-                  }`}
-                >
-                  <button
-                    className="page-link"
-                    onClick={() => handlePageChange(index + 1)}
-                  >
-                    {index + 1}
-                  </button>
-                </li>
-              ))}
-              <li
-                className={`page-item ${
-                  currentPage === totalPages ? 'disabled' : ''
-                }`}
-              >
-                <button
-                  className="page-link"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                >
-                  Следующая
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </>
+        </div>
+      ) : (
+        <SearchResults results={results} totalPages={totalPages} district={district}/>
       )}
-    </main>
+    </div>
   );
-}
- 
+};
+
 export default Search;

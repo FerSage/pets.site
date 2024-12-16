@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-
-
 function Slide({ data, isActive }) {
   return (
     <div className={`carousel-item ${isActive ? 'active' : ''}`}>
@@ -35,20 +33,26 @@ function Loader({ display }) {
 function Slider() {
   const [sliderData, setSliderData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);  // Для обработки ошибок
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    fetchSliderData();
+    const delayLoading = setTimeout(() => {
+      fetchSliderData();
+    }, 500); // Задержка 500 мс перед загрузкой данных
+
+    return () => clearTimeout(delayLoading);
   }, []);
 
   const fetchSliderData = async () => {
     try {
-      const response = await fetch('https://pets.xn--80ahdri7a.site/api/pets/slider');    
+      const response = await fetch('https://pets.xn--80ahdri7a.site/api/pets/slider');
       const data = await response.json();
       setSliderData(data.data.pets || []);
       setLoading(false);
     } catch (error) {
       console.error('Ошибка при загрузке данных:', error);
+      setError('Не удалось загрузить слайды. Попробуйте позже.');
       setLoading(false);
     }
   };
@@ -93,6 +97,7 @@ function Slider() {
         backgroundColor: index === activeIndex ? 'black' : 'gray',
         border: 'none',
         cursor: 'pointer',
+        transition: 'background-color 0.3s',
       }}
     />
   ));
@@ -100,7 +105,8 @@ function Slider() {
   return (
     <div>
       <Loader display={{ display: loading ? 'flex' : 'none' }} />
-      {!loading && (
+      {error && <div className="text-center text-danger">{error}</div>}
+      {!loading && !error && (
         <div
           id="carouselExampleIndicators"
           className="carousel slide m-auto w-75 p-2"
