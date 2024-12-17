@@ -1,56 +1,93 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from 'react';
 
 const SubscriptionForm = () => {
-    const [email, setEmail] = useState(""); // Состояние для ввода email
-    const [isSubscribed, setIsSubscribed] = useState(false); // Состояние для подписки
+  // Состояния для email, сообщений об ошибке и успехе
+  const [email, setEmail] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-    const handleSubmit = (event) => {
-        event.preventDefault(); // Предотвращает перезагрузку страницы
-        setIsSubscribed(true); // Устанавливаем состояние подписки
+  // Обработчик изменения в поле ввода
+  const handleChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  // Обработчик отправки формы
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Сброс сообщений
+    setSuccessMessage('');
+    setErrorMessage('');
+
+    if (!email) {
+      setErrorMessage('Пожалуйста, введите адрес электронной почты.');
+      return;
+    }
+
+    const requestBody = {
+      email: email,
     };
 
-    useEffect(() => {
-        if (isSubscribed) {
-            console.log(`User subscribed with email: ${email}`);
-            // Можно добавить логику, например, отправку данных на сервер
-        }
-    }, [isSubscribed]); // useEffect срабатывает только при изменении isSubscribed
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    };
 
-    return (
-        <div className="d-flex justify-content-center align-items-center min-vh-10 bg-light">
-            <div className="card shadow-sm p-4" style={{ maxWidth: "61%", width: "100%" }}>
-                {isSubscribed ? (
-                    <div className="alert alert-success text-center m-0">
-                        <h5 className="mb-0">Спасибо за подписку!</h5>
-                    </div>
-                ) : (
-                    <form onSubmit={handleSubmit}>
-                        <h5 className="text-center mb-3">Подписка на новости</h5>
-                        <div className="mb-3">
-                            <label htmlFor="emailInput" className="form-label">
-                                Введите ваш email
-                            </label>
-                            <input
-                                type="email"
-                                className="form-control"
-                                id="emailInput"
-                                placeholder="example@mail.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                            />
-                            <div id="emailHelp" className="form-text">
-                                Мы не будем делиться вашим email.
-                            </div>
-                        </div>
-                        <button type="submit" className="btn btn-primary w-100">
-                            Подписаться
-                        </button>
-                    </form>
-                )}
-            </div>
-        </div>
-    );
+    try {
+      const response = await fetch('https://pets.сделай.site/api/subscription', requestOptions);
+
+      if (response.ok) {
+        console.log(response);
+        setSuccessMessage('Спасибо за подписку! Теперь вы будете получать новости.');
+        setEmail('');
+      } else {
+        setErrorMessage('Произошла ошибка. Пожалуйста, попробуйте позже.');
+      }
+    } catch (error) {
+      setErrorMessage('Ошибка сети. Проверьте соединение.');
+    }
+  };
+
+  return (
+    <div className="m-3 text-center">
+      <h1 className="mb-4">
+        Подпишитесь на нас, чтобы всегда быть в курсе нахождения животных!
+      </h1>
+
+      {successMessage ? (
+        <div className="alert alert-success">{successMessage}</div>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <div
+            className="input-group justify-content-center"
+            style={{ maxWidth: '400px', margin: '0 auto' }}
+          >
+            <span className="input-group-text" id="addon-wrapping">
+              @
+            </span>
+            <input
+              type="email"
+              className="form-control"
+              placeholder="Адрес электронной почты"
+              aria-label="Имя пользователя"
+              aria-describedby="addon-wrapping"
+              value={email}
+              onChange={handleChange}
+              required
+            />
+            <button type="submit" className="btn btn-primary">
+              Отправить
+            </button>
+          </div>
+        </form>
+      )}
+
+      {errorMessage && <div className="alert alert-danger mt-3">{errorMessage}</div>}
+    </div>
+  );
 };
 
 export default SubscriptionForm;

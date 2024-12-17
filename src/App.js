@@ -1,31 +1,33 @@
 import Header from "./components/header";
 import Footer from "./components/footer";
-import Main from "./pages/main";
-import Profile from "./pages/profile";
-import New from "./pages/new";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Link,
-} from 'react-router-dom';
-import Search from "./pages/search";
+import MainPage from "./pages/mainPage"
+import MyAccount from "./pages/myAccount"
+import PetSearch from "./pages/animalSearch"
+import AnimalAdd from "./pages/animalAdd";
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import RegistrationPage from "./pages/registrationPage";
+import PetDetailPage from './pages/petDetailPage';
 
-function App() {
+
+
+const App = () => {
   return (
+    
     <Router>
-    <div className="App">
-      <Header/>
+      <Header />
+      <div className="container mt-4">
       <Routes>
-        <Route path={"/"} element={<Main/>}/>
-        <Route path={"/profile"} element={<Profile/>}/>
-        <Route path={"/add-post"} element={<New/>}/>
-        <Route path={"/search"} element={<Search/>}/>
+        <Route path={'/'} element={<MainPage/>}/>
+        <Route path={'/registration'} element={<RegistrationPage/>}/>
+        <Route path={'/myaccount'} element={<MyAccount/>}/>
+        <Route path={'/add-pet'} element={<AnimalAdd/>}/>
+        <Route path={'/pet-search'} element={<PetSearch/>}/>
+        <Route path={'/pet/:id'} element={<PetDetailPage/>}/>
       </Routes>
-      <Footer/>
-    </div>
+      </div>
+      <Footer />
     </Router>
   );
-}
+};
 
 export default App;
